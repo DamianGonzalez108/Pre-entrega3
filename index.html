@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Mercado</title>
+    <link rel="stylesheet" href="/pre entrega-3/index.css">
+</head>
+<body>
+    <header>
+        <h1>Mi Mercado</h1>
+    </header>
+    <!--Lista de productos-->
+    <section class="productos">
+
+
+    </section>
+    <!-- bloque para más productos -->
+    <section class="carrito">
+        <h2>Carrito de compras</h2>
+        <ul class="lista-carrito">
+            <!-- Los productos seleccionados se agregarán aquí -->
+        </ul>
+        <p>Total: $<span id="total">0.00</span></p>
+    </section>
+    <section class="agregar-producto">
+        <h2>Agregar nuevo producto</h2>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" placeholder="Nombre del producto">
+        <label for="precio">Precio:</label>
+        <input type="number" id="precio" placeholder="Precio del producto">
+        <button id="agregar">Agregar</button>
+    </section>
+    <script src="index.js"></script>
+</body>
+</html>
