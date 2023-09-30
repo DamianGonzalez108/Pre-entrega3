@@ -36,9 +36,13 @@ const losProductos = [
   },
 ];
 const carrito = [];
-
+//PRODUCTOS
 const productos = document.querySelector(".productos");
+//CARRITO
 const carritoSelector = document.querySelector(".lista-carrito");
+//PAGAR CARRITO
+const btnPagarCarrito = document.querySelector("#btnPagar");
+const formPagar = document.querySelector("#formmularioPagar");
 
 function tarjetas() {
   productos.innerHTML = "";
@@ -80,6 +84,36 @@ document.addEventListener("click", (e) => {
       eliminarDelCarrito(productoBusqueda);
     }
   });
+
+  const btnCheckout = document.querySelector("#btnCheckout");
+  if (e.target == btnCheckout) {
+    formPagar.innerHTML = `<form id="formDatos" >
+    <input type="text" placeholder="Nombre Completo">
+    <input type="email" placeholder="E-mail">
+    <input type="text" placeholder="Direccion">
+    <input type="text" placeholder="Telefono">
+    <input id="btnFormulario" type="button" value="Pagar">
+    </form>
+    `;
+  }
+  const btnFormulario = document.querySelector("#btnFormulario");
+  if (e.target == btnFormulario) {
+    Swal.fire({
+      title: "¿Quieres confirmar la compra?",
+      text: "Si cancelas, deberas empezar de nuevo!",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, lo quiero!",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Finalizado!", "Tu compra ha sido exitosa", "success");
+      }
+    });
+  }
 });
 
 function agregarAlCarrito(producto) {
@@ -115,15 +149,29 @@ function rederizarCarrito() {
         <li class="producto-carrito">${nombre} - ${precio} - Cantidad= ${cantidad} <button id="${id}Eliminar" class="btnEliminar" ">X</button></li>
     `;
   });
+  btnPagarCarrito.innerHTML = "";
+  if (carrito.length > 0) {
+    btnPagarCarrito.innerHTML = `<button id="btnCheckout">Pagar</button>`;
+  }
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const carritoSinparse = localStorage.getItem("carrito") || [];
   const carritoParse = JSON.parse(carritoSinparse);
   carritoParse.length > 0
     ? carrito.push(...carritoParse)
-    : alert("No hay productos en el carrito");
+    : Toastify({
+        text: "No hay productos en el carrito",
+        duration: 3000,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "linear-gradient(to right, #c2c2c2,#1c8bbf)",
+        },
+        onClick: function () {}, // Callback after click
+      }).showToast();
 
   rederizarCarrito();
 });
