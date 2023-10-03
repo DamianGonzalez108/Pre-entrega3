@@ -65,3 +65,8 @@ button:hover {
 #total {
     font-weight: bold;
 }
+
+/* Display de input Productos*/
+.inputProductos{
+    display: none;
+}

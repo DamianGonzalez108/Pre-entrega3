@@ -85,35 +85,6 @@ document.addEventListener("click", (e) => {
     }
   });
 
-  const btnCheckout = document.querySelector("#btnCheckout");
-  if (e.target == btnCheckout) {
-    formPagar.innerHTML = `<form id="formDatos" >
-    <input type="text" placeholder="Nombre Completo">
-    <input type="email" placeholder="E-mail">
-    <input type="text" placeholder="Direccion">
-    <input type="text" placeholder="Telefono">
-    <input id="btnFormulario" type="button" value="Pagar">
-    </form>
-    `;
-  }
-  const btnFormulario = document.querySelector("#btnFormulario");
-  if (e.target == btnFormulario) {
-    Swal.fire({
-      title: "¿Quieres confirmar la compra?",
-      text: "Si cancelas, deberas empezar de nuevo!",
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, lo quiero!",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Finalizado!", "Tu compra ha sido exitosa", "success");
-      }
-    });
-  }
 });
 
 function agregarAlCarrito(producto) {
@@ -149,10 +120,61 @@ function rederizarCarrito() {
         <li class="producto-carrito">${nombre} - ${precio} - Cantidad= ${cantidad} <button id="${id}Eliminar" class="btnEliminar" ">X</button></li>
     `;
   });
-  btnPagarCarrito.innerHTML = "";
-  if (carrito.length > 0) {
-    btnPagarCarrito.innerHTML = `<button id="btnCheckout">Pagar</button>`;
-  }
+  formPagar.innerHTML = `<form id="formDatos" >
+  <input name="nombre" id="nombre type="text" placeholder="Nombre Completo">
+  <input name="mail" id="mail type="email" placeholder="E-mail">
+  <input name="direccion" id="direccion type="text" placeholder="Direccion">
+  <input name="telefono" id="telefono type="text" placeholder="Telefono">
+  <input type="text" class="inputProductos" name="productos" id="productos">
+  <input id="btnFormulario" type="submit" value="Pagar">
+  </form>
+  `;
+const inputProductos = document.querySelector(".inputProductos") 
+document.querySelector("#formDatos").addEventListener("submit", (e) =>{
+  e.preventDefault()
+  console.log(inputProductos)
+  const serviceID = 'default_service';
+  const templateID = 'template_sz3bueb';
+
+  carrito.forEach(producto => {
+    inputProductos.value += `${producto.nombre} - ${producto.cantidad} \n`
+  })
+  Swal.fire({
+    title: "¿Quieres confirmar la compra?",
+    text: "Si cancelas, deberas empezar de nuevo!",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, lo quiero!",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire("Finalizado!", "Tu compra ha sido exitosa", "success");
+
+      emailjs.sendForm(serviceID, templateID,document.querySelector("#formDatos"))
+      .then(() => {
+        Toastify({
+          text: "E-mail enviado correctamente",
+          duration: 3000,
+          close: true,
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, #c2c2c2,#1c8bbf)",
+          },
+          onClick: function () {}, // Callback after click
+        }).showToast();
+      }, (err) => {
+        alert(JSON.stringify(err));
+      });
+    }
+  });
+
+
+  })
 }
 
 document.addEventListener("DOMContentLoaded", () => {
